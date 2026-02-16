@@ -93,7 +93,7 @@
             <div class="user-info">
                 <img id="avatar" class="user-avatar" src="" alt="Avatar">
                 <div><b id="username">Chargement...</b></div>
-                <i class="fas fa-sign-out-alt" onclick="logout()" style="margin-left:auto; cursor:pointer;"></i>
+                <i class="fas fa-sign-out-alt" onclick="logout()" style="margin-left:auto; cursor:pointer;"></i>   
             </div>
         </div>
 
@@ -104,12 +104,12 @@
                     <div class="stat-card" onclick="updateValue('units')">
                         <i class="fas fa-ambulance" style="color:var(--accent-blue)"></i>
                         <h4 id="stat-units">03</h4>
-                        <span>Unités en patrouille</span>
+                        <span>En Service</span>
                     </div>
                     <div class="stat-card" onclick="updateValue('beds')">
                         <i class="fas fa-bed" style="color:var(--accent-blue)"></i>
                         <h4 id="stat-beds">12</h4>
-                        <span>Lits disponibles</span>
+                        <span>Unités en patrouille</span>
                     </div>
                     <div class="stat-card" onclick="updateValue('emergencies')">
                         <i class="fas fa-procedures" style="color:var(--accent-red)"></i>
@@ -132,4 +132,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
