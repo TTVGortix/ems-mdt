@@ -1,17 +1,15 @@
 const CLIENT_ID = '1472988748487590144';
-const REDIRECT_URI = 'https://ttvgortix.github.io/ems_moodlife/';
+// URL mise à jour pour correspondre à ton dépôt "ems"
+const REDIRECT_URI = 'https://ttvgortix.github.io/ems/'; 
 
-// Fonction pour changer le chiffre au clic et le SAUVEGARDER
 function updateValue(id) {
     const newValue = prompt("Entrez la nouvelle valeur :");
-    if (newValue !== null && newValue !== "") {
+    if (newValue !== null && newValue.trim() !== "") {
         document.getElementById('stat-' + id).innerText = newValue;
-        // On enregistre dans la mémoire du navigateur
         localStorage.setItem('sams_' + id, newValue);
     }
 }
 
-// Fonction pour charger les chiffres sauvegardés au démarrage
 function loadData() {
     const keys = ['units', 'beds', 'emergencies', 'staff'];
     keys.forEach(key => {
@@ -39,15 +37,17 @@ function logout() {
 }
 
 window.onload = () => {
-    loadData(); // Charge les chiffres (03, 12, etc.)
-
+    loadData();
     const fragment = new URLSearchParams(window.location.hash.slice(1));
     let token = fragment.get('access_token') || localStorage.getItem('discord_token');
 
     if (token) {
         localStorage.setItem('discord_token', token);
         fetch('https://discord.com/api/users/@me', { headers: { authorization: `Bearer ${token}` } })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error();
+            return res.json();
+        })
         .then(user => {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-ui').style.display = 'flex';
