@@ -1,5 +1,5 @@
 const CLIENT_ID = '1472988748487590144';
-const REDIRECT_URI = 'https://ttvgortix.github.io/SAMS_MOOODLIFE/'; 
+const REDIRECT_URI = 'https://ttvgortix.github.io/SAMS_MOOODLIFE'; 
 
 // Fonction pour changer le chiffre au clic et le SAUVEGARDER
 function updateValue(id) {
