@@ -2,183 +2,110 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAMS MOODLIFE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>EMS - Terminal de Secours</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #0a0b10;
-            --bg-sidebar: #12141d;
-            --accent-red: #ff3e3e;
-            --accent-blue: #3e94ff;
-            --text-main: #f0f0f0;
-            --text-dim: #a0a0a0;
-            --card-bg: #1a1d29;
-            --border-color: rgba(255, 255, 255, 0.05);
+            --bg-dark: #0f111a;
+            --bg-sidebar: #161925;
+            --accent-red: #d32f2f;
+            --text-main: #e0e0e0;
+            --card-bg: #1f2235;
         }
 
         body {
-            margin: 0; font-family: 'Inter', sans-serif;
+            margin: 0; font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg-dark); color: var(--text-main);
             display: flex; height: 100vh; overflow: hidden;
         }
 
+        /* Écran de connexion */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1d29 0%, #0a0b10 100%);
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;
+            background: var(--bg-dark); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
         }
 
-        #main-ui { display: none; width: 100%; height: 100%; display: flex; }
+        .login-card {
+            background: var(--bg-sidebar); padding: 40px; border-radius: 15px;
+            text-align: center; border-top: 5px solid var(--accent-red);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .btn-discord {
+            background: #5865F2; color: white; border: none; padding: 15px 30px;
+            font-size: 1.1rem; font-weight: bold; border-radius: 5px;
+            cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        }
+        .btn-discord:hover { background: #4752C4; transform: scale(1.05); }
+
+        /* Interface Principale (Cachée au début) */
+        #main-ui { display: none; width: 100%; display: flex; }
 
         .sidebar {
-            width: 280px; background-color: var(--bg-sidebar);
-            display: flex; flex-direction: column; padding: 25px;
-            border-right: 1px solid var(--border-color);
+            width: 260px; background-color: var(--bg-sidebar);
+            display: flex; flex-direction: column; padding: 20px;
+            border-right: 2px solid var(--accent-red);
         }
-
-        .logo-area { text-align: center; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
-        .logo-area h2 { margin: 0; color: var(--accent-red); letter-spacing: 3px; font-size: 1.8rem; }
 
         .nav-link {
-            padding: 14px 18px; color: var(--text-dim); text-decoration: none;
-            border-radius: 10px; margin-bottom: 8px; transition: 0.2s;
-            display: flex; align-items: center; gap: 15px; cursor: pointer;
+            padding: 15px; color: var(--text-main); text-decoration: none;
+            border-radius: 8px; margin-bottom: 10px; transition: 0.3s;
+            display: flex; align-items: center; gap: 15px; background: rgba(255, 255, 255, 0.05);
         }
-        .nav-link:hover, .nav-link.active { background: rgba(255, 62, 62, 0.1); color: var(--accent-red); }
+        .nav-link:hover { background: var(--accent-red); }
 
-        .content { flex: 1; padding: 40px; overflow-y: auto; background: #0a0b10; }
-
-        /* --- STRUCTURE DE L'ANCIEN DASHBOARD --- */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .search-bar { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; width: 400px; display: flex; align-items: center; gap: 10px; }
-        .search-bar input { background: none; border: none; color: white; width: 100%; outline: none; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .card { 
-            background: var(--card-bg); padding: 25px; border-radius: 15px; 
-            border: 1px solid var(--border-color); position: relative; overflow: hidden;
-            transition: 0.3s;
-        }
-        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-red); }
-
-        .status-dot { height: 10px; width: 80px; background: #2ecc71; border-radius: 20px; display: inline-block; margin-right: 10px; }
-
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .user-info { display: flex; align-items: center; gap: 12px; margin-top: auto; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 10px; border: 2px solid var(--accent-red); }
+        .content { flex: 1; padding: 40px; overflow-y: auto; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; border-top: 4px solid var(--accent-red); margin-bottom: 20px;}
+        
+        .user-info { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 5px;}
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--accent-red); }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <i class="fas fa-heartbeat" style="font-size: 4rem; color: var(--accent-red); margin-bottom: 20px;"></i>
-        <h1>SAMS MOODLIFE</h1>
-        <button onclick="login()" style="background:#5865F2; color:white; border:none; padding:15px 30px; border-radius:8px; cursor:pointer; font-weight:bold; display: flex; align-items: center; gap: 10px;">
-            <i class="fab fa-discord"></i> CONNEXION DISCORD
-        </button>
+        <div class="login-card">
+            <h1 style="color: var(--accent-red);">ACCÈS RESTREINT</h1>
+            <p>Veuillez vous identifier pour accéder au terminal EMS</p><br>
+            <button class="btn-discord" onclick="login()">
+                <i class="fab fa-discord"></i> CONNEXION DISCORD
+            </button>
+        </div>
     </div>
 
     <div id="main-ui">
         <div class="sidebar">
-            <div class="logo-area">
-                <h2>SAMS</h2>
-                <small style="color:var(--text-dim)">MEDICAL SERVICES</small>
-            </div>
+            <h2>EMS SUPPORT</h2>
+            <a href="#" class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="#" class="nav-link"><i class="fas fa-user-injured"></i> Dossiers Patients</a>
+            <a href="#" class="nav-link"><i class="fas fa-file-medical"></i> Rapports</a>
+            <a href="#" class="nav-link"><i class="fas fa-pills"></i> Pharmacie</a>
             
-            <nav>
-                <div class="nav-link active" onclick="showTab('dashboard', this)"><i class="fas fa-chart-line"></i> Dashboard</div>
-                <div class="nav-link" onclick="showTab('patients', this)"><i class="fas fa-users"></i> Dossiers Patients</div>
-                <div class="nav-link" onclick="showTab('reports', this)"><i class="fas fa-notes-medical"></i> Rapports</div>
-            </nav>
-            
-            <div class="user-info">
-                <img id="avatar" class="user-avatar" src="" alt="Avatar">
-                <div>
-                    <b id="username">Agent</b><br>
-                    <span style="color:#2ecc71; font-size:0.8rem">● En service</span>
-                </div>
-                <i class="fas fa-power-off" onclick="logout()" style="margin-left:auto; cursor:pointer; color:var(--text-dim)"></i>
+            <div id="user-profile" class="user-info">
+                <img id="avatar" class="user-avatar" src="">
+                <span id="username">Chargement...</span>
+                <i class="fas fa-sign-out-alt" onclick="logout()" style="margin-left:auto; cursor:pointer;"></i>
             </div>
         </div>
 
         <div class="content">
-            <div id="dashboard" class="tab-content active">
-                <div class="header-bar">
-                    <div>
-                        <h1 style="margin:0;">Tableau de bord</h1>
-                        <p style="color: var(--text-dim); margin: 5px 0 0 0;">Bienvenue sur le terminal de régulation SAMS.</p>
-                    </div>
-                    <div class="search-bar">
-                        <i class="fas fa-search" style="color: var(--text-dim);"></i>
-                        <input type="text" placeholder="Rechercher un citoyen...">
-                    </div>
-                </div>
-
-                <div class="grid">
-                    <div class="card">
-                        <h3 style="margin-top:0;"><i class="fas fa-info-circle" style="color: var(--accent-red);"></i> État du Service</h3>
-                        <p><span class="status-dot"></span> <b>SAMS Opérationnel</b></p>
-                        <p style="color: var(--text-dim); font-size: 0.85rem;">Unités connectées sur le réseau MoodLife.</p>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="margin-top:0;"><i class="fas fa-clipboard-list" style="color: var(--accent-blue);"></i> Dernières Interventions</h3>
-                        <ul style="list-style: none; padding:0; font-size: 0.85rem;">
-                            <li style="margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                <b style="color: var(--accent-red);">16:45</b> - AVP Autoroute Est
-                            </li>
-                            <li style="margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                <b style="color: var(--accent-red);">16:20</b> - Chute Square Legion
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="margin-top:0;"><i class="fas fa-user-md" style="color: var(--accent-red);"></i> Médecins Disponibles</h3>
-                        <p>🟢 Dr. Gortix (Chef de service)</p>
-                        <p>🟢 Dr. [Nom du collègue]</p>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 25px; border-left: 4px solid var(--accent-blue);">
-                    <h3><i class="fas fa-bullhorn" style="color: var(--accent-blue);"></i> Annonces du Haut Commandement</h3>
-                    <p>N'oubliez pas de vérifier vos stocks d'adrénaline et de kits de suture avant chaque prise de service. Les patrouilles en solo sont interdites après 22h.</p>
-                </div>
-            </div>
-
-            <div id="patients" class="tab-content">
-                <h1>Dossiers Patients</h1>
-                <div class="card">Base de données accessible.</div>
-            </div>
-
-            <div id="reports" class="tab-content">
-                <h1>Rapports</h1>
-                <div class="card">Aucun rapport récent.</div>
+            <h1>Terminal Médical - <span style="color:var(--accent-red)">LSMS</span></h1>
+            <div class="card">
+                <h3>Bienvenue dans le MDT</h3>
+                <p>Système de gestion des urgences de Los Santos.</p>
             </div>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = '1472988748487590144';
-        const REDIRECT_URI = 'https://ttvgortix.github.io/ems-mdt/'; 
-
-        function showTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-        }
+        const REDIRECT_URI = window.location.href.split('#')[0].split('?')[0]; 
 
         function login() {
-            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            window.location.href = url;
         }
 
         function logout() {
@@ -192,17 +119,27 @@
 
             if (token) {
                 localStorage.setItem('discord_token', token);
-                fetch('https://discord.com/api/users/@me', { headers: { authorization: `Bearer ${token}` } })
-                .then(res => res.json())
+                fetch('https://discord.com/api/users/@me', {
+                    headers: { authorization: `Bearer ${token}` }
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json();
+                })
                 .then(user => {
+                    // Masquer login, afficher site
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('main-ui').style.display = 'flex';
+                    
+                    // Remplir les infos user
                     document.getElementById('username').innerText = user.username;
                     if(user.avatar) {
                         document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
                     }
+                    // Nettoyer l'URL
                     window.history.replaceState({}, document.title, REDIRECT_URI);
-                }).catch(() => logout());
+                })
+                .catch(() => logout());
             }
         };
     </script>
